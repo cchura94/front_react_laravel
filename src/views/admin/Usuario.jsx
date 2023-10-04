@@ -16,7 +16,7 @@ const Usuario = () => {
 
     return(<>
         <h1>Gestión Usuarios</h1>
-        <table border={1}>
+        <table className="items-center w-full bg-transparent border-collapse">
             <thead>
                 <tr>
                     <td>ID</td>

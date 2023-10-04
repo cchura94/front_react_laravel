@@ -1,14 +1,18 @@
+import Routes from './routes'
 
-import { Routes, Route, Link, NavLink } from 'react-router-dom'
-import Inicio from './views/Inicio'
-import Login from './views/Login'
-import Usuario from './views/admin/Usuario'
+import './layouts/css/style.css';
+
+import './layouts/charts/ChartjsConfig';
 
 function App() {
   
   return (
     <>
-    <NavLink to="/">INICIO</NavLink> |
+
+      <Routes></Routes>
+    {
+      /*
+      <NavLink to="/">INICIO</NavLink> |
     <NavLink to="/login">INGRESAR</NavLink> |
     <NavLink to="/usuario">USUARIOS</NavLink>
     
@@ -17,7 +21,7 @@ function App() {
       <Route path="/login" element={<Login></Login>}></Route>
       <Route path="/usuario" element={<Usuario></Usuario>}></Route>
     </Routes>
-
+    */}
     
     </>
   )
