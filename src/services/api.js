@@ -27,6 +27,17 @@ api.interceptors.request.use(
 )
 
 // capturar errores (401, 403)
+api.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    (error) => {
+        if(error.response.status === 401){
+            localStorage.removeItem("access_token");
+            window.location.href = "/login"
+        }
+    }
+)
 
 const apiService = {
     get: (url, params) => api.get(url, {params}),
