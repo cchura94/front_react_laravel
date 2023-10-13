@@ -2,6 +2,7 @@ import api from "./api";
 
 const productoService = {
     listar: (page=1, q='') => {
+        console.log(q)
         return api.get(`/producto?page=${page}&q=${q}`);
     },
     guardar: (datos) => {
