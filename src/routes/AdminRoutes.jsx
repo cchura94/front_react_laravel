@@ -1,6 +1,7 @@
 import Usuario from "../views/admin/Usuario";
 import AdminLayout from "../layouts/AdminLayout";
 import Categoria from "../views/admin/Categoria";
+import Producto from "../views/admin/Producto";
 
 const AdminRoutes = {
     path: '/admin',
@@ -13,6 +14,10 @@ const AdminRoutes = {
         {
             path: 'categoria',
             element: <Categoria></Categoria>
+        },
+        {
+            path: 'producto',
+            element: <Producto />
         }
     ]
 }

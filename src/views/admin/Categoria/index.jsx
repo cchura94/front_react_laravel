@@ -53,6 +53,14 @@ const Categoria = () => {
 
     }
 
+    function cerrarModal(){
+        setNombre("")
+        setDetalle("")
+        setIdSeleccion(null)
+
+        setModalOpen(false)
+    }
+
 
     return (
         <>
@@ -94,7 +102,7 @@ const Categoria = () => {
                 </tbody>
             </table>
 
-            <Modal modalOpen={modalOpen} setModalOpen={setModalOpen} titulo="Guardar Categoria">
+            <Modal modalOpen={modalOpen} setModalOpen={cerrarModal} titulo="Guardar Categoria">
                 <form onSubmit={(e) => guardarCategoria(e)}>
                     <label htmlFor="">Ingrese Nombre</label>
                     <input type="text" value={nombre} onChange={e => setNombre(e.target.value)}

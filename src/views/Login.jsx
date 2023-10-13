@@ -1,8 +1,11 @@
 import { useState } from "react"
+import { useNavigate } from 'react-router-dom'
 import authService from "./../services/authService"
 import MessageService from "./../services/MessageService"
 
 function Login() {
+
+  const navigate = useNavigate()
 
     const [correo, setCorreo] = useState("")
   const [clave, setClave] = useState("")
@@ -19,6 +22,8 @@ function Login() {
       const {data} = await authService.loginConLaravel(credenciales)
       console.log(data)
       localStorage.setItem("access_token", data.access_token)
+
+      navigate("/admin/categoria")
 
     } catch (error) {
       alert("Ocurrio un problema al autenticar")
