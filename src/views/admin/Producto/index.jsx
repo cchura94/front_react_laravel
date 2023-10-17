@@ -11,9 +11,11 @@ const Producto = () => {
     const [total, setTotal] = useState(0)
     const [page, setPage] = useState(1)
     const [modalOpen, setModalOpen] = useState(false)
-    const [producto, setProducto] = useState({nombre: "", precio: 0, stock: 0, descripcion: "", categoria_id: ""})
+    const [producto, setProducto] = useState({ nombre: "", precio: 0, stock: 0, descripcion: "", categoria_id: "" })
     const [idseleccion, setIdSeleccion] = useState(null)
     // const [buscar, setBuscar] = useState('')
+    const [modalOpenImage, setModalOpenImage] = useState(false)
+    const [imagen, setImagen] = useState(null)
 
     useEffect(() => {
         listarProducto()
@@ -21,11 +23,11 @@ const Producto = () => {
     }, [])
 
     const columnas = [
-        {key: "id", label: "ID"},
-        {key: "nombre", label: "NOMBRE"},
-        {key: "precio", label: "PRECIO"},
-        {key: "stock", label: "CANTIDAD"},
-        {key: "categoria.nombre", label: "CATEGORIA"}
+        { key: "id", label: "ID" },
+        { key: "nombre", label: "NOMBRE" },
+        { key: "precio", label: "PRECIO" },
+        { key: "stock", label: "CANTIDAD" },
+        { key: "categoria.nombre", label: "CATEGORIA" }
     ]
 
     const listarProducto = async (nroPage) => {
@@ -33,30 +35,33 @@ const Producto = () => {
             setPage(nroPage)
             console.log(nroPage)
 
-            const {data} = await productoService.listar(nroPage);
+            const { data } = await productoService.listar(nroPage);
             setProductos(data.data)
             setTotal(data.total)
 
-            
+
         } catch (error) {
-            
+
         }
 
     }
     const listarCategorias = async () => {
         try {
-            const {data} = await categoriaService.listar();
+            const { data } = await categoriaService.listar();
             setCategorias(data)
-            
+
         } catch (error) {
-            
+
         }
 
     }
-    function cerrarModal(){
+    function cerrarModal() {
         setModalOpen(false)
     }
-    
+    function cerrarModalImage(){
+        setModalOpenImage(false)
+    }
+
     const handleChage = (e) => {
         const { name, value } = e.target;
 
@@ -84,35 +89,69 @@ const Producto = () => {
     const buscador = async (e) => {
         try {
             // setPage(nroPage)
-            if(e.key === 'Enter'){
+            if (e.key === 'Enter') {
                 let buscar = e.target.value
-    console.log(buscar)
-                const {data} = await productoService.listar(1, buscar);
+                console.log(buscar)
+                const { data } = await productoService.listar(1, buscar);
                 console.log(data)
                 setProductos(data.data)
                 setTotal(data.total)
 
             }
 
-            
+
         } catch (error) {
-            
+
         }
-        
+
+    }
+
+    const handleUploadImage = (data) => {
+        console.log(data)
+        setProducto(data)
+        setIdSeleccion(data.id)
+        setModalOpenImage(true)
+    }
+
+    const actualizarImagen = async () => {
+        console.log(imagen)
+        if(idseleccion){
+            let formData = new FormData();
+            formData.append("imagen", imagen);
+            const {data} = await productoService.enviarImagen(idseleccion, formData)
+            console.log(data)
+
+            setModalOpenImage(false)
+            setProducto({ nombre: "", precio: 0, stock: 0, descripcion: "", categoria_id: "" })
+            listarProducto()
+        }
+    }
+
+    const handleShowProducto = (data) => {
+        console.log(data)
+        setIdSeleccion(data.id)
+        setProducto(data)
+        setModalOpen(true)
     }
 
     return (
         <>
-        <button type="button" className="py-3 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded" onClick={() => setModalOpen(!modalOpen)}>NUEVO</button>
+        <div className="bg-white p-4 rounded shadow">
 
-        <input type="search" onKeyDown={(e) => buscador(e)} />
-        
+            <button type="button" className="py-3 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded" onClick={() => setModalOpen(!modalOpen)}>NUEVO</button>
 
-        <TablePagination columnas={columnas} datos={productos} total={total} page={page} paginate={listarProducto}></TablePagination>
-        
-        <Modal modalOpen={modalOpen} setModalOpen={cerrarModal} titulo="Guardar Producto">
-            <pre>{ JSON.stringify(producto) }</pre>
-               <form onSubmit={(e) => guardarProducto(e)}>
+            <input type="search" onKeyDown={(e) => buscador(e)} />
+
+
+            <TablePagination columnas={columnas} datos={productos} total={total} page={page} paginate={listarProducto} handleUploadImage={handleUploadImage} handleShow={handleShowProducto}></TablePagination>
+        </div>
+
+            <Modal modalOpen={modalOpen} setModalOpen={cerrarModal} titulo="Guardar Producto">
+                { /* <pre>{JSON.stringify(producto)}</pre> */ }
+                <div style={{textAlign: "center"}}>
+                    <img src={'http://localhost:8000/'+producto.imagen} alt="" width="200px" />
+                </div>
+                <form onSubmit={(e) => guardarProducto(e)}>
                     <label htmlFor="">Ingrese Nombre</label>
                     <input type="text" name="nombre" value={producto.nombre} onChange={handleChage}
                         className="border border-gray-300 rounded px-2 py-1 mb-2 w-full" />
@@ -144,7 +183,19 @@ const Producto = () => {
                     <br />
                     <input type="submit" className="py-3 px-4 bg-blue-500 text-white hover:bg-blue-600 rounded" value="Guardar Producto" />
                 </form>
-        </Modal>
+            </Modal>
+
+            <Modal modalOpen={modalOpenImage} setModalOpen={cerrarModalImage} titulo="Subida de Imagen">
+            <div style={{textAlign: "center"}}>
+                    <img src={'http://localhost:8000/'+producto.imagen} alt="" width="200px" />
+                </div>
+                    <label htmlFor="">Seleccione sun Imagen</label>
+                    <input type="file" onChange={(e) => setImagen(e.target.files[0])}
+                        className="border border-gray-300 rounded px-2 py-1 mb-2 w-full" />
+                    <br />
+
+                    <button type="button" onClick={() => actualizarImagen()}>Actualizar Imagen</button>
+            </Modal>
         </>
     )
 }

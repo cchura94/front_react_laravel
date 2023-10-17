@@ -17,6 +17,9 @@ const productoService = {
     eliminar: (id) => {
         return api.delete(`/producto/${id}`);
     },
+    enviarImagen: (id, fd) => {
+        return api.post(`/producto/${id}/actualizar-imagen`, fd);
+    },
 }
 
 export default productoService;

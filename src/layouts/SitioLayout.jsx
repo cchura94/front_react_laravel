@@ -4,7 +4,6 @@ import { Outlet } from 'react-router-dom';
 const SitioLayout = () => {
   return (
     <>
-    <h1>SitioLayout</h1>
     <Outlet />
     </>
   )
