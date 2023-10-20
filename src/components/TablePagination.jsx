@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const TablePagination = ({ columnas, datos, total, page, paginate, handleUploadImage, handleEdit, handleDelete, handleShow, handleAddCarrito }) => {
+const TablePagination = ({ columnas, datos, total, page, paginate, handleUploadImage, handleEdit, handleDelete, handleShow, handleAddCarrito, handlePDF }) => {
     const [itemsPerPage, setItemsPerPage] = useState(5)
     return (
         <>
@@ -49,6 +49,12 @@ const TablePagination = ({ columnas, datos, total, page, paginate, handleUploadI
                                         </svg>
 
 
+                                    </button>
+                                }
+                                
+                                {handlePDF &&
+                                    <button className="py-1 px-2 bg-red-500 text-white rounded" onClick={() => handlePDF(data)}>
+                                        PDF
                                     </button>
                                 }
 
